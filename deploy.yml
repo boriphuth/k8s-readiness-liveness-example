@@ -14,21 +14,48 @@ spec:
     spec:
       containers:
         - name: spring-boot-example
-          image: 'gcr.io/fleet-resolver-237016/spring-boot-example:v2'
+          image: 'boriphuth/spring-boot-example'
           ports:
             - containerPort: 8080
           readinessProbe:
-            httpGet:
-              path: /lazy
+            tcpSocket:
               port: 8080
-            initialDelaySeconds: 15
+            initialDelaySeconds: 5
             periodSeconds: 10
           livenessProbe:
-            httpGet:
-              path: /lazy
+            tcpSocket:
               port: 8080
             initialDelaySeconds: 15
-            periodSeconds: 10
+            periodSeconds: 20
+            
+          # readinessProbe:
+          #   httpGet:
+          #     path: /lazy
+          #     port: 8080
+          #   initialDelaySeconds: 15
+          #   periodSeconds: 10
+          # livenessProbe:
+          #   httpGet:
+          #     path: /lazy
+          #     port: 8080
+          #   initialDelaySeconds: 15
+          #   periodSeconds: 10
+# ---
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: spring-boot-example
+#   labels:
+#     name: spring-boot-example
+# spec:
+#   ports:
+#     - port: 8080
+#       targetPort: 8080
+#       protocol: TCP
+#   selector:
+#     app: spring-boot-example
+#   type: LoadBalancer
+
 ---
 apiVersion: v1
 kind: Service
@@ -37,10 +64,11 @@ metadata:
   labels:
     name: spring-boot-example
 spec:
-  ports:
-    - port: 8080
-      targetPort: 8080
-      protocol: TCP
   selector:
     app: spring-boot-example
-  type: LoadBalancer
+  type: NodePort
+  ports:
+    - port: 8080
+      nodePort: 30080
+      protocol: TCP
+  

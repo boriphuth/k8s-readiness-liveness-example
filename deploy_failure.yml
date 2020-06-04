@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: spring-boot-example
-          image: 'gcr.io/fleet-resolver-237016/spring-boot-example:v2'
+          image: 'boriphuth/spring-boot-example'
           ports:
             - containerPort: 8080
           readinessProbe:
@@ -37,10 +37,10 @@ metadata:
   labels:
     name: spring-boot-example
 spec:
-  ports:
-    - port: 8080
-      targetPort: 8080
-      protocol: TCP
   selector:
     app: spring-boot-example
-  type: LoadBalancer
+  type: NodePort
+  ports:
+    - port: 8080
+      nodePort: 30080
+      protocol: TCP
